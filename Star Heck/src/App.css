@@ -47,6 +47,18 @@
   display: inline-block;
 }
 
+.red {
+  background-color:#f14e52;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
+}
+
 .userInput {
   min-height: 4vh;
   margin-top: 4vh;

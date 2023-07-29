@@ -13,12 +13,14 @@ function App() {
   }
 
   let statusText = 'Red Alert!';
+  let statusColor = 'red';
+  let status = 'yellow';
 
   return (
     <div className='everything'>
     <textarea value={'He fires the phasers.'} readOnly={true} onChange={() => console.log('change')} className="textFeed globalCentering"/>
     <div className='statusDisplay globalCentering'>
-      <span class="dot" /> {statusText}
+      <span class={status === 'red' ? "red dot" : status === 'yellow' ?  "yellow dot" : "green dot"} /> {statusText}
     </div>
     <form onSubmit={handleSubmit}>
       <input defaultValue="Warp speed!" className='userInput globalCentering' />
