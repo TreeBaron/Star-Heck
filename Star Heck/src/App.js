@@ -5,14 +5,25 @@ import Cookies from 'universal-cookie';
 
 function App() {
 
-  // const [goal, setGoal] = useState(0);
-  
+  function handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    console.log('ravioli!');
+  }
+
+  let statusText = 'Red Alert!';
+
   return (
-    <>
-    <h1 className=''>STAR HECK</h1>
-    <div >
+    <div className='everything'>
+    <textarea value={'He fires the phasers.'} readOnly={true} onChange={() => console.log('change')} className="textFeed globalCentering"/>
+    <div className='statusDisplay globalCentering'>
+      <span class="dot" /> {statusText}
     </div>
-    </>
+    <form onSubmit={handleSubmit}>
+      <input defaultValue="Warp speed!" className='userInput globalCentering' />
+    </form>
+    </div>
   );
 }
 

@@ -1,4 +1,60 @@
-.heading {
-  font-family: 'Lucida Sans';
-  font-size: large;
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Federant&family=Ubuntu&display=swap');
+
+.everything
+{
+  background-color: #1c2638;
+}
+
+.globalCentering {
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.textFeed {
+  min-height: 75vh;
+  height: 75%;
+  font-family: 'Federant';
+  font-size: x-large;
+  color: #daf2e9;
+  background-color: #23495d;
+  border: 0px;
+}
+
+.statusDisplay 
+{
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+  min-height: 4vh;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  font-family: 'Federant';
+  font-size: x-large;
+  color: #daf2e9;
+  border-color: #f14e52;
+  border: 2px solid;
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  margin-left: 5vw;
+  margin-right: 2vw;
+  padding-right: 50px;
+  background-color: #95e0cc;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.userInput {
+  min-height: 4vh;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
+  height: 75%;
+  font-family: 'Federant';
+  font-size: x-large;
+  color: #daf2e9;
+  background-color: #23495d;
+  border: 0px;
 }
