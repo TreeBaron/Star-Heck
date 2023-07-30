@@ -1,26 +1,18 @@
 /*
 Command List:
-fire (weapon)
-fire (weapon) and (weapon)
+fire (weapon) at (thing)
 warp to (place)
 set course for (place)
 beam down
-beam down with (party member) and (party member) and (party member)
-beam down with (department)
-beam down with (department) and (department) and (department)
-scan (place)
-scan (person)
-scan (department)
+beam down with (person) and (person)
+scan (thing)
 combine (item) with (item)
 beam up (person)
-beam up (department)
 beam up away team
 talk to (person)
 talk to (ship)
 communicator
-attack (ship)
-attack (person)
-attack (planet)
+attack (thing)
 charm (person)
 flirt (person)
 kiss (person)
@@ -29,13 +21,74 @@ barter with (person)
 buy from (person)
 carry (body)
 use (item)
+take (item)
 */
+
+export const notImplementedFunction = () => console.log('Not yet implemented.');
+
+export const commandWordDictionary = [
+'and',
+'attack',
+'away',
+'barter',
+'beam',
+'buy',
+'carry',
+'charm',
+'combine',
+'communicator',
+'course',
+'down',
+'fire',
+'flirt',
+'for',
+'from',
+'kiss',
+'scan',
+'set',
+'stun',
+'take',
+'talk',
+'team',
+'to',
+'up',
+'use',
+'warp',
+'with'
+];
+
+export const commandFunctionDictionary = {
+    'fire (weapon) at (thing)' : notImplementedFunction(),
+    'warp to (place)' : notImplementedFunction(),
+    'set course for (place)' : notImplementedFunction(),
+    'beam down' : notImplementedFunction(),
+    'beam down with (person) and (person)' : notImplementedFunction(),
+    'scan (thing)' : notImplementedFunction(),
+    'combine (item) with (item)' : notImplementedFunction(),
+    'beam up (person)' : notImplementedFunction(),
+    'beam up away team' : notImplementedFunction(),
+    'talk to (person)' : notImplementedFunction(),
+    'talk to (ship)' : notImplementedFunction(),
+    'communicator' : notImplementedFunction(),
+    'attack (thing)' : notImplementedFunction(),
+    'charm (person)' : notImplementedFunction(),
+    'flirt (person)' : notImplementedFunction(),
+    'kiss (person)' : notImplementedFunction(),
+    'stun (person)' : notImplementedFunction(),
+    'barter with (person)' : notImplementedFunction(),
+    'buy from (person)' : notImplementedFunction(),
+    'carry (person)' : notImplementedFunction(),
+    'use (item)' : notImplementedFunction(),
+    'take (item)' : notImplementedFunction()
+};
 
 export function getTypos(str) {
  
     const replaceAt = (text, index, char) => {
 	    return text.substr(0, index) + char + text.substr(index+char.length);
     }
+
+    //console.log('getTypos('+str+')');
 
     //define proximity arrays
     var array_prox = [];
@@ -86,4 +139,33 @@ export function getTypos(str) {
 	}
 
 	return arr;
+}
+
+export function tokenize(input) {
+    input = input.toLowerCase();
+    input = input.replace(/[^a-z0-9 ]/gi, '');
+    let tokens = input.split(' ');
+    let tokenFinalList = [];
+
+    for(let i = 0; i < tokens.length; i++)
+    {
+        let word = tokens[i];
+        if(!commandWordDictionary.includes(tokens[i]))
+        {
+            // get all typos...
+            let typos = getTypos(tokens[i]);
+
+            for(let x = 0; x < typos.length; x++)
+            {
+                if(commandWordDictionary.includes(typos[x]))
+                {
+                    word = typos[x];
+                    break;
+                }
+            }
+
+        }
+        tokenFinalList.push(word);
+    }
+    return tokenFinalList;
 }
