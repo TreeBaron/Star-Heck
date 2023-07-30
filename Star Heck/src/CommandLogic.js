@@ -185,7 +185,7 @@ const talk = (input, gameContext) => {
 
     if(selected.conversations.length >= 1)
     {
-        gameContext.OverrideHandleSubmit = (input, gameContext) => 
+        const overrideFunction = (input, gameContext) => 
         {
             gameContext.setConsoleText(gameContext.consoleText + '\n>> '+gameContext.inputValue);
             gameContext.setInputValue('');
@@ -195,15 +195,15 @@ const talk = (input, gameContext) => {
             {
                 gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
             }
-            gameContext.refresh();
 
             if(gameContext.inputValue.toLowerCase() == 'exit' || gameContext.inputValue.toLowerCase() == 'bye' || gameContext.inputValue.toLowerCase() == 'goodbye')
             {
                 gameContext.print('>> You say goodbye.');
-                gameContext.setHandleSubmit(null);
+                gameContext.OverrideHandleSubmit = null;
             }
             else
             {
+                gameContext.OverrideHandleSubmit = overrideFunction;
                 for(let i = 0; i < selected.conversations.length; i++)
                 {
                     if(gameContext.inputValue == (i+1))
@@ -212,14 +212,17 @@ const talk = (input, gameContext) => {
                         gameContext.print(selected.conversations[i].answer);
                         if(selected.conversations[i].action)
                         {
-                            selected.conversations[i].action();
+                            selected.conversations[i].action(gameContext);
                         }
                     }
                 }
             }
             gameContext.print('');
-    
+            
+            return gameContext;
         };
+
+        gameContext.OverrideHandleSubmit = overrideFunction;
     }
     else
     {

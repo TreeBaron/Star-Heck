@@ -6,11 +6,9 @@ function App() {
   const [consoleText, setConsoleText] = useState('Welcome to Star Heck.\nCreated by John Dodd.');
   const [inputValue, setInputValue] = useState('Enter commands here.');
   const [gameContext, setGameContext] = useState(null);
-  const [refresh, setRefresh] = useState(0);
   const textArea = useRef();
 
   const handleSubmit = (e) => {
-    console.log('handleSubmit called within wrapper.');
 
     // Prevent the browser from reloading the page
     e.preventDefault();
@@ -30,10 +28,14 @@ function App() {
     {
       console.log('Calling override.');
       let contextNew = gameContext.OverrideHandleSubmit(input, gameContext);
-      setGameContext(contextNew);
       setConsoleText(consoleText + '\n'+gameContext.queuedText);
       gameContext.queuedText = '';
+      setGameContext(contextNew);
       return;
+    }
+    else
+    {
+      console.log('Override not called.');
     }
 
     let result = PerformCommand(input, gameContext);
@@ -61,7 +63,7 @@ function App() {
         maxScience: 10,
         combat: 5,
         maxCombat: 10,
-        inventory: []
+        items: []
       },
       communicatorMessages: []
     });
@@ -76,9 +78,6 @@ function App() {
     gameContext.queuedText = '';
     gameContext.print = (text) => {
       gameContext.queuedText += '\n'+text;
-    }
-    gameContext.refresh = () => {
-      setRefresh(refresh + 1);
     }
   }
 
