@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { PerformCommand, tokenize } from './CommandParser';
+import { PerformCommand } from './CommandParser';
 
 function App() {
 
   const [consoleText, setConsoleText] = useState('Welcome to Star Heck.\nCreated by John Dodd.');
   const [inputValue, setInputValue] = useState('Enter commands here.');
   const [gameContext, setGameContext] = useState(null);
+  const textArea = useRef();
 
   if(!gameContext)
   {
@@ -36,6 +37,10 @@ function App() {
     gameContext.setConsoleText = setConsoleText;
     gameContext.inputValue = inputValue;
     gameContext.consoleText = consoleText;
+    gameContext.queuedText = '';
+    gameContext.print = (text) => {
+      gameContext.queuedText += '\n'+text;
+    }
   }
 
 
@@ -52,16 +57,23 @@ function App() {
 
     let result = PerformCommand(input, gameContext);
     setGameContext(result);
-
+    setConsoleText(consoleText + '\n'+gameContext.queuedText);
+    gameContext.queuedText = '';
   }
 
   let statusText = 'Green Alert. All is normal.';
   let statusColor = 'green';
   let status = 'green';
 
+  // After render, this scrolls the textArea to the bottom.
+  useEffect(() => {
+    const area = textArea.current;
+    area.scrollTop = area.scrollHeight;
+  });
+
   return (
     <div className='everything'>
-    <textarea value={consoleText} readOnly={true} onChange={() => console.log('change')} className="textFeed globalCentering"/>
+    <textarea value={consoleText} readOnly={true} onChange={() => console.log('change')} className="textFeed globalCentering" ref={textArea}/>
     <div className='statusDisplay globalCentering'>
       <span class={status === 'red' ? "red dot" : status === 'yellow' ?  "yellow dot" : "green dot"} /> {statusText}
     </div>

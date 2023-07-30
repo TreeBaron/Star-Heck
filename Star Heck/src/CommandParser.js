@@ -1,35 +1,4 @@
-import { notImplementedFunction, commandFunctionDictionary } from "./CommandLogic";
-
-export const commandWordDictionary = [
-'and',
-'attack',
-'away',
-'barter',
-'beam',
-'buy',
-'carry',
-'charm',
-'combine',
-'communicator',
-'course',
-'down',
-'fire',
-'flirt',
-'for',
-'from',
-'kiss',
-'scan',
-'set',
-'stun',
-'take',
-'talk',
-'team',
-'to',
-'up',
-'use',
-'warp',
-'with'
-];
+import { notImplementedFunction, commandFunctionDictionary, commandWordDictionary } from "./CommandLogic";
 
 export function getTypos(str) {
  
@@ -112,13 +81,13 @@ export function tokenize(input, replaceThings) {
                     break;
                 }
             }
+            
+            if(replaceThings && !(word in commandFunctionDictionary))
+            {
+                word = '(thing)';
+            }
         }
 
-        if(replaceThings && !(word in commandFunctionDictionary))
-        {
-            word = '(thing)';
-        }
-        
         tokenFinalList.push(word);
         
     }
@@ -126,7 +95,9 @@ export function tokenize(input, replaceThings) {
 }
 
 export function PerformCommand(input, gameContext) {
-    let key = tokenize(input, true);
+    gameContext.print('>> '+input);
+
+    let key = tokenize(input, true).join(' ');
 
     if(!(key in commandFunctionDictionary))
     {
