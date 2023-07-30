@@ -1,30 +1,4 @@
-/*
-Command List:
-fire (weapon) at (thing)
-warp to (place)
-set course for (place)
-beam down
-beam down with (person) and (person)
-scan (thing)
-combine (item) with (item)
-beam up (person)
-beam up away team
-talk to (person)
-talk to (ship)
-communicator
-attack (thing)
-charm (person)
-flirt (person)
-kiss (person)
-stun (person)
-barter with (person)
-buy from (person)
-carry (body)
-use (item)
-take (item)
-*/
-
-export const notImplementedFunction = () => console.log('Not yet implemented.');
+import { notImplementedFunction, commandFunctionDictionary } from "./CommandLogic";
 
 export const commandWordDictionary = [
 'and',
@@ -56,31 +30,6 @@ export const commandWordDictionary = [
 'warp',
 'with'
 ];
-
-export const commandFunctionDictionary = {
-    'fire (weapon) at (thing)' : notImplementedFunction(),
-    'warp to (place)' : notImplementedFunction(),
-    'set course for (place)' : notImplementedFunction(),
-    'beam down' : notImplementedFunction(),
-    'beam down with (person) and (person)' : notImplementedFunction(),
-    'scan (thing)' : notImplementedFunction(),
-    'combine (item) with (item)' : notImplementedFunction(),
-    'beam up (person)' : notImplementedFunction(),
-    'beam up away team' : notImplementedFunction(),
-    'talk to (person)' : notImplementedFunction(),
-    'talk to (ship)' : notImplementedFunction(),
-    'communicator' : notImplementedFunction(),
-    'attack (thing)' : notImplementedFunction(),
-    'charm (person)' : notImplementedFunction(),
-    'flirt (person)' : notImplementedFunction(),
-    'kiss (person)' : notImplementedFunction(),
-    'stun (person)' : notImplementedFunction(),
-    'barter with (person)' : notImplementedFunction(),
-    'buy from (person)' : notImplementedFunction(),
-    'carry (person)' : notImplementedFunction(),
-    'use (item)' : notImplementedFunction(),
-    'take (item)' : notImplementedFunction()
-};
 
 export function getTypos(str) {
  
@@ -141,7 +90,7 @@ export function getTypos(str) {
 	return arr;
 }
 
-export function tokenize(input) {
+export function tokenize(input, replaceThings) {
     input = input.toLowerCase();
     input = input.replace(/[^a-z0-9 ]/gi, '');
     let tokens = input.split(' ');
@@ -163,9 +112,29 @@ export function tokenize(input) {
                     break;
                 }
             }
-
         }
+
+        if(replaceThings && !(word in commandFunctionDictionary))
+        {
+            word = '(thing)';
+        }
+        
         tokenFinalList.push(word);
+        
     }
     return tokenFinalList;
+}
+
+export function PerformCommand(input, gameContext) {
+    let key = tokenize(input, true);
+
+    if(!(key in commandFunctionDictionary))
+    {
+        gameContext.setConsoleText(gameContext.consoleText+'\nCommand not found.');
+        return gameContext;
+    }
+
+    let functionSelected = commandFunctionDictionary[key];
+
+    return functionSelected(input, gameContext);
 }
