@@ -1,3 +1,5 @@
+import { getLocation } from "./CommandLogic";
+
 export const AllLocations = [
     {
         name: 'Earth Space Dock',
@@ -8,7 +10,7 @@ export const AllLocations = [
     {
         name: 'Starfleet Academy Courtyard',
         description: 'A large fountain adorns the center of the courtyard. Students casually walk by on their way to classes, tablets in hand. It\'s a beautiful day in San Francisco. In the distance you see shuttles flying past the Golden Gate bridge.',
-        adjacentLocations: ['Earth Space Dock', 'Cybernetics Lab', 'Quantum Mechanics Classroom']
+        adjacentLocations: ['Earth Space Dock', 'Cybernetics Lab', 'Quantum Mechanics Classroom', 'Engineering Classroom', 'Medical Classroom', 'Command Training Room']
     },
     {
         name: 'Cybernetics Lab',
@@ -21,32 +23,26 @@ export const AllLocations = [
         adjacentLocations: ['Starfleet Academy Courtyard']
     },
     {
-        'name': 'Engineering Classroom',
-        'description': 'This classroom is filled with state-of-the-art equipment, where students learn how to operate and maintain starships.',
-        'adjacentLocations': ['Starfleet Academy Courtyard']
-    },
+        name: 'Engineering Classroom',
+        description: 'This classroom is filled with state-of-the-art equipment, where students learn how to operate and maintain starships.',
+        adjacentLocations: ['Starfleet Academy Courtyard']
+    },      
       {
-        'name': 'Science Classroom',
-        'description': 'This classroom is equipped with laboratories where students conduct experiments and learn about the laws of physics and the universe.',
-        'adjacentLocations': ['Starfleet Academy Courtyard']
+        name: 'Command Training Room',
+        description: 'This room is equipped with holodecks that can simulate any leadership scenario, from a starship bridge to a diplomatic negotiation.',
+        adjacentLocations: ['Starfleet Academy Courtyard']
       },
       
       {
-        'name': 'Command Training Room',
-        'description': 'This room is equipped with holodecks that can simulate any leadership scenario, from a starship bridge to a diplomatic negotiation.',
-        'adjacentLocations': ['Starfleet Academy Courtyard']
+        name: 'Language Lab',
+        description: 'This lab is equipped with computers that can teach students how to speak and understand different languages.',
+        adjacentLocations: ['Starfleet Academy Courtyard']
       },
       
       {
-        'name': 'Language Lab',
-        'description': 'This lab is equipped with computers that can teach students how to speak and understand different languages.',
-        'adjacentLocations': ['Starfleet Academy Courtyard']
-      },
-      
-      {
-        'name': 'Medical Classroom',
-        'description': 'This classroom is equipped with medical simulators and other equipment, where students learn how to treat injuries and diseases.',
-        'adjacentLocations': ['Starfleet Academy Courtyard']
+        name: 'Medical Classroom',
+        description: 'This classroom is equipped with medical simulators and other equipment, where students learn how to treat injuries and diseases.',
+        adjacentLocations: ['Starfleet Academy Courtyard']
       },
       {
         name: 'Enterprise Bridge',
@@ -65,7 +61,7 @@ export const AllLocations = [
     },
     {
         name: 'Enterprise Transporter Room',
-        description: 'The transporter room. The transporter chief nods at you, \'Hello Captain\'.',
+        description: 'The transporter chief nods at you, \'Hello Captain\'.',
         adjacentLocations: ['Enterprise Bridge', 'Enterprise Engineering', 'Enterprise Sickbay']
     },
 ];
@@ -83,11 +79,38 @@ export const AllPeople = [
     }
 ];
 
+export const AllConditionals = [
+    {
+        location: 'Earth Space Dock',
+        onEnterRoom: true,
+        triggerLogic: (gameContext) => {
+            if(gameContext.player.inventory.find(x => x.name === 'Self Sealing Stem Bolt Box'))
+            {
+                let spaceDock = getLocation('Earth Space Dock');
+                spaceDock.adjacentLocations.push('Enterprise Transporter Room')
+                gameContext.print('>> You message Scotty you have the bolts.')
+                gameContext.print('Scotty: Excellent work captain! I\'ll have her ready to be underway in a jiffy.');
+            }
+            else
+            {
+                const scottysMessage = 'Scotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts.';
+                gameContext.print('>> Your communicator chirps.')
+                gameContext.communicatorMessages.push(scottysMessage);
+            }
+        }
+    }
+];
+
 export const AllItems = [
     {
         name: 'Cybernetic Arm',
         description: 'A detached mechanical arm.',
         location: 'Cybernetics Lab'
+    },
+    {
+        name: 'Self Sealing Stem Bolt Box',
+        description: 'A box of self sealing stem bolts.',
+        location: 'Engineering Classroom'
     }
 ];
 

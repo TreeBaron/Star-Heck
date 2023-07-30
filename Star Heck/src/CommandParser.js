@@ -89,8 +89,22 @@ export function tokenize(input, replaceThings) {
         }
 
         tokenFinalList.push(word);
-        
     }
+
+    for(let i = 1; i < tokenFinalList.length; i++)
+    {
+        if(tokenFinalList[i-1] === '(thing)' && tokenFinalList[i-1] === tokenFinalList[i])
+        {
+            tokenFinalList[i] = null;
+        }
+        if(tokenFinalList[i] === '(thing)' && tokenFinalList[i-1] === null)
+        {
+            tokenFinalList[i] = null;
+        }
+    }
+
+    tokenFinalList = tokenFinalList.filter(x => !!x);
+
     return tokenFinalList;
 }
 

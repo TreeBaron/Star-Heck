@@ -13,7 +13,7 @@ function App() {
   {
     setGameContext(
     {
-      currentLocation: 'Earth Space Dock',
+      currentLocation: 'Starfleet Academy Courtyard',
       player: {
         name: 'James T. Kirk',
         description: 'Starfleet\'s finest.',
@@ -27,7 +27,9 @@ function App() {
         maxScience: 10,
         combat: 5,
         maxCombat: 10,
-      }
+        inventory: []
+      },
+      communicatorMessages: []
     });
   }
 

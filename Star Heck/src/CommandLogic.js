@@ -1,11 +1,10 @@
-import { AllLocations } from "./Places";
+import { AllLocations, AllItems, AllConditionals } from "./Places";
 
 /*
 Command List:
 fire (weapon) at (thing)
 warp to (place)
 set course for (place)
-beam down
 beam down with (person) and (person)
 scan (thing)
 combine (item) with (item)
@@ -24,21 +23,49 @@ buy from (person)
 carry (body)
 use (item)
 take (item)
-look
+inventory
+go to (place)
 */
 
 
-const getLocation = (name) =>
+export const getLocation = (name) =>
 {
     return AllLocations.find(x => x.name === name);
 }
 
-const getCurrentLocation = (gameContext) =>
+export const getItemsInLocation = (gameContext) =>
+{
+    let itemsInPlace = [];
+    for(let i = 0; i < AllItems.length; i++)
+    {
+        if(gameContext.currentLocation === AllItems[i].location)
+        {
+            itemsInPlace.push(AllItems[i]);
+        }
+    }
+    return itemsInPlace;
+}
+
+export const getConditionalsInLocation = (gameContext) =>
+{
+    let conditionals = [];
+    for(let i = 0; i < AllConditionals.length; i++)
+    {
+        if(gameContext.currentLocation === AllConditionals[i].location)
+        {
+            conditionals.push(AllConditionals[i]);
+        }
+    }
+    return conditionals;
+}
+
+
+export const getCurrentLocation = (gameContext) =>
 {
     return AllLocations.find(x => x.name === gameContext.currentLocation);
 }
 
-const getAdjacentLocations = (gameContext) => {
+export const getAdjacentLocations = (gameContext) => {
     let currentLocation = getCurrentLocation(gameContext);
     let adjacentPlaces = currentLocation.adjacentLocations.map(x => getLocation(x));
     return adjacentPlaces;
@@ -50,10 +77,52 @@ export const notImplementedFunction = (input, gameContext) =>
     return gameContext;
 };
 
+const communicator = (input, gameContext) => {
+    if(gameContext.communicatorMessages.length >= 1)
+    {
+        gameContext.print('>> You flip open your communicator.\n');
+        gameContext.print(gameContext.communicatorMessages[0]);
+        gameContext.communicatorMessages.shift();
+    }
+    else
+    {
+        gameContext.print('>> You flip open your communicator.\n>> Captain\'s log...I still don\'t know what I\'m doing in command.'); 
+    }
+
+    return gameContext;
+}
+
+const take = (input, gameContext) =>
+{
+    input = input.toLowerCase();
+    let items = getItemsInLocation(gameContext);
+    if(items.length <= 0)
+    {
+        gameContext.print('>> There\'s nothing to take.');
+        return gameContext;
+    }
+
+    let selected = items[0];
+    for(let i = 0; i < items.length; i++)
+    {
+        if(input.includes(items[i].name.toLowerCase()))
+        {
+            selected = items[i];
+        }
+    }
+
+    selected.location = undefined;
+    gameContext.player.inventory.push(selected);
+
+    gameContext.print('>> You pick up '+selected.name);
+
+    return gameContext;
+}
+
 const look = (input, gameContext) => 
 {
     gameContext.print(getCurrentLocation(gameContext).description);
-    gameContext.print('Nearby Locations: \n');
+    gameContext.print('\nNearby Locations:');
     
     let travelPlaces = getAdjacentLocations(gameContext);
     for(let i = 0; i < travelPlaces.length; i++)
@@ -61,23 +130,62 @@ const look = (input, gameContext) =>
         gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
     }
 
+    let items = getItemsInLocation(gameContext);
+    if(items.length >= 1)
+    {
+        gameContext.print('\nNearby Items:');
+        for(let i = 0; i < items.length; i++)
+        {
+            gameContext.print('['+(i+1)+'] - '+items[i].name);
+        }
+    }
+
+
     return gameContext;
 }
 
 const beamDown = (input, gameContext) => 
 {
+    return commenceTravel(input, gameContext, '>> You beam down to (place).');
+}
+
+
+const beamUp = (input, gameContext) => 
+{
+    return commenceTravel(input, gameContext, '>> You beam up to (place).');
+}
+
+const goTo = (input, gameContext) => 
+{
+    return commenceTravel(input, gameContext, '>> You go to (place).\n');
+}
+
+const commenceTravel = (input, gameContext, message) =>
+{
+    input = input.toLowerCase();
     let travelPlaces = getAdjacentLocations(gameContext);
     let selected = travelPlaces[0];
     for(let i = 0; i < travelPlaces.length; i++)
     {
-        if(input.includes(travelPlaces[i].name))
+        if(input.includes(travelPlaces[i].name.toLowerCase()) || input.includes((i+1)))
         {
             selected = travelPlaces[i];
         }
     }
-    gameContext.print('>> You beam down to '+selected.name+'\n');
+    gameContext.print(message.replace('(place)', selected.name));
     gameContext.print(selected.description);
     gameContext.currentLocation = selected.name;
+
+    // trigger any relevant events
+    let conditionals = getConditionalsInLocation(gameContext);
+    for(let i = 0; i < conditionals.length; i++)
+    {
+        if(conditionals[i].onEnterRoom)
+        {
+            conditionals[i].triggerLogic(gameContext);
+        }
+    }
+
     return gameContext;
 }
 
@@ -98,6 +206,7 @@ export const commandWordDictionary = [
     'flirt',
     'for',
     'from',
+    'go',
     'kiss',
     'scan',
     'set',
@@ -117,13 +226,14 @@ export const commandFunctionDictionary = {
     'warp to (thing)' : notImplementedFunction,
     'set course for (thing)' : notImplementedFunction,
     'beam down' : beamDown,
+    'beam up' : beamUp,
     'beam down with (thing) and (thing)' : notImplementedFunction,
     'scan (thing)' : notImplementedFunction,
     'combine (thing) with (thing)' : notImplementedFunction,
     'beam up (thing)' : notImplementedFunction,
     'beam up away team' : notImplementedFunction,
     'talk to (thing)' : notImplementedFunction,
-    'communicator' : notImplementedFunction,
+    'communicator' : communicator,
     'attack (thing)' : notImplementedFunction,
     'charm (thing)' : notImplementedFunction,
     'flirt (thing)' : notImplementedFunction,
@@ -133,6 +243,7 @@ export const commandFunctionDictionary = {
     'buy from (thing)' : notImplementedFunction,
     'carry (thing)' : notImplementedFunction,
     'use (thing)' : notImplementedFunction,
-    'take (thing)' : notImplementedFunction,
+    'take (thing)' : take,
     'look' : look,
+    'go to (thing)' : goTo
 };
