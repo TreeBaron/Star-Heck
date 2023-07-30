@@ -185,11 +185,9 @@ const talk = (input, gameContext) => {
 
     if(selected.conversations.length >= 1)
     {
-        gameContext.OverrideHandleSubmit = (input, gameContext) => {
-            console.log('override code called');
-            input = gameContext.inputValue;
-      
-            gameContext.setConsoleText(gameContext.AllItemsconsoleText + '\n>> '+gameContext.inputValue);
+        gameContext.OverrideHandleSubmit = (input, gameContext) => 
+        {
+            gameContext.setConsoleText(gameContext.consoleText + '\n>> '+gameContext.inputValue);
             gameContext.setInputValue('');
             
             gameContext.print('');
@@ -197,7 +195,8 @@ const talk = (input, gameContext) => {
             {
                 gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
             }
-    
+            gameContext.refresh();
+
             if(gameContext.inputValue.toLowerCase() == 'exit' || gameContext.inputValue.toLowerCase() == 'bye' || gameContext.inputValue.toLowerCase() == 'goodbye')
             {
                 gameContext.print('>> You say goodbye.');

@@ -21,17 +21,20 @@ function App() {
       return;
     }
 
+    let input = `${inputValue}`;
+
+    setConsoleText(consoleText + '\n>> '+input);
+    setInputValue('');
+
     if(gameContext.OverrideHandleSubmit)
     {
       console.log('Calling override.');
-      gameContext.OverrideHandleSubmit(inputValue, gameContext);
+      let contextNew = gameContext.OverrideHandleSubmit(input, gameContext);
+      setGameContext(contextNew);
+      setConsoleText(consoleText + '\n'+gameContext.queuedText);
+      gameContext.queuedText = '';
       return;
     }
-
-    let input = inputValue;
-
-    setConsoleText(consoleText + '\n>> '+inputValue);
-    setInputValue('');
 
     let result = PerformCommand(input, gameContext);
     setGameContext(result);
