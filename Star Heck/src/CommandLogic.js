@@ -1,4 +1,4 @@
-import { AllLocations, AllItems, AllConditionals } from "./Places";
+import { AllLocations, AllItems, AllConditionals, AllPeople } from "./Places";
 
 /*
 Command List:
@@ -46,6 +46,19 @@ export const getItemsInLocation = (gameContext) =>
     return itemsInPlace;
 }
 
+export const getPeopleInLocation = (gameContext) =>
+{
+    let peopleInPlace = [];
+    for(let i = 0; i < AllPeople.length; i++)
+    {
+        if(gameContext.currentLocation === AllPeople[i].location)
+        {
+            peopleInPlace.push(AllPeople[i]);
+        }
+    }
+    return peopleInPlace;
+}
+
 export const getConditionalsInLocation = (gameContext) =>
 {
     let conditionals = [];
@@ -58,7 +71,6 @@ export const getConditionalsInLocation = (gameContext) =>
     }
     return conditionals;
 }
-
 
 export const getCurrentLocation = (gameContext) =>
 {
@@ -140,6 +152,81 @@ const look = (input, gameContext) =>
         }
     }
 
+
+    return gameContext;
+}
+
+const talk = (input, gameContext) => {
+    input = input.toLowerCase();
+    let people = getPeopleInLocation(gameContext);
+
+    if(people.length <= 0)
+    {
+        gameContext.print('>> You see no one you can talk to at the moment.');
+        return gameContext;
+    }
+
+    let selected = people[0];
+    for(let i = 0; i < people.length; i++)
+    {
+        if(input.includes(people[i].name.toLowerCase() || input.includes((i+1))))
+        {
+            selected = people[i];
+        }
+    }
+
+    gameContext.print('>> You talk to '+selected.name);
+
+    gameContext.print('');
+    for(let i = 0; i < selected.conversations.length; i++)
+    {
+        gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
+    }
+
+    if(selected.conversations.length >= 1)
+    {
+        gameContext.OverrideHandleSubmit = (input, gameContext) => {
+            console.log('override code called');
+            input = gameContext.inputValue;
+      
+            gameContext.setConsoleText(gameContext.AllItemsconsoleText + '\n>> '+gameContext.inputValue);
+            gameContext.setInputValue('');
+            
+            gameContext.print('');
+            for(let i = 0; i < selected.conversations.length; i++)
+            {
+                gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
+            }
+    
+            if(gameContext.inputValue.toLowerCase() == 'exit' || gameContext.inputValue.toLowerCase() == 'bye' || gameContext.inputValue.toLowerCase() == 'goodbye')
+            {
+                gameContext.print('>> You say goodbye.');
+                gameContext.setHandleSubmit(null);
+            }
+            else
+            {
+                for(let i = 0; i < selected.conversations.length; i++)
+                {
+                    if(gameContext.inputValue == (i+1))
+                    {
+                        gameContext.setInputValue('');
+                        gameContext.print(selected.conversations[i].answer);
+                        if(selected.conversations[i].action)
+                        {
+                            selected.conversations[i].action();
+                        }
+                    }
+                }
+            }
+            gameContext.print('');
+    
+        };
+    }
+    else
+    {
+        gameContext.print('>> They won\'t speak to you.');
+        return gameContext;
+    }
 
     return gameContext;
 }
@@ -232,7 +319,7 @@ export const commandFunctionDictionary = {
     'combine (thing) with (thing)' : notImplementedFunction,
     'beam up (thing)' : notImplementedFunction,
     'beam up away team' : notImplementedFunction,
-    'talk to (thing)' : notImplementedFunction,
+    'talk to (thing)' : talk,
     'communicator' : communicator,
     'attack (thing)' : notImplementedFunction,
     'charm (thing)' : notImplementedFunction,

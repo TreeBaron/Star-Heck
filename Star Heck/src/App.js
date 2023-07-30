@@ -3,11 +3,42 @@ import './App.css';
 import { PerformCommand } from './CommandParser';
 
 function App() {
-
   const [consoleText, setConsoleText] = useState('Welcome to Star Heck.\nCreated by John Dodd.');
   const [inputValue, setInputValue] = useState('Enter commands here.');
   const [gameContext, setGameContext] = useState(null);
+  const [refresh, setRefresh] = useState(0);
   const textArea = useRef();
+
+  const handleSubmit = (e) => {
+    console.log('handleSubmit called within wrapper.');
+
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    if(!gameContext) 
+    {
+      console.log('gameContext not set, called early abort.');
+      return;
+    }
+
+    if(gameContext.OverrideHandleSubmit)
+    {
+      console.log('Calling override.');
+      gameContext.OverrideHandleSubmit(inputValue, gameContext);
+      return;
+    }
+
+    let input = inputValue;
+
+    setConsoleText(consoleText + '\n>> '+inputValue);
+    setInputValue('');
+
+    let result = PerformCommand(input, gameContext);
+    setGameContext(result);
+    setConsoleText(consoleText + '\n'+gameContext.queuedText);
+    gameContext.queuedText = '';
+  };
+
 
   if(!gameContext)
   {
@@ -43,24 +74,9 @@ function App() {
     gameContext.print = (text) => {
       gameContext.queuedText += '\n'+text;
     }
-  }
-
-
-  function handleSubmit(e) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
-
-    if(!gameContext) return;
-
-    let input = inputValue;
-
-    setConsoleText(consoleText + '\n>> '+inputValue);
-    setInputValue('');
-
-    let result = PerformCommand(input, gameContext);
-    setGameContext(result);
-    setConsoleText(consoleText + '\n'+gameContext.queuedText);
-    gameContext.queuedText = '';
+    gameContext.refresh = () => {
+      setRefresh(refresh + 1);
+    }
   }
 
   let statusText = 'Green Alert. All is normal.';

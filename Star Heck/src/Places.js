@@ -10,40 +10,23 @@ export const AllLocations = [
     {
         name: 'Starfleet Academy Courtyard',
         description: 'A large fountain adorns the center of the courtyard. Students casually walk by on their way to classes, tablets in hand. It\'s a beautiful day in San Francisco. In the distance you see shuttles flying past the Golden Gate bridge.',
-        adjacentLocations: ['Earth Space Dock', 'Cybernetics Lab', 'Quantum Mechanics Classroom', 'Engineering Classroom', 'Medical Classroom', 'Command Training Room']
+        adjacentLocations: ['Earth Space Dock', 'Cybernetics Lab']
     },
     {
         name: 'Cybernetics Lab',
         description: 'Students work at various lab stations on robotic arms, while the instructor paces back and forth, watching their work.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
+        adjacentLocations: ['Starfleet Academy Courtyard', 'Quantum Mechanics Classroom', 'Engineering Classroom']
     },
     {
         name: 'Quantum Mechanics Classroom',
         description: 'The classroom is empty. On the display board a note says class has been cancelled.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
+        adjacentLocations: ['Starfleet Academy Courtyard', 'Cybernetics Lab']
     },
     {
         name: 'Engineering Classroom',
         description: 'This classroom is filled with state-of-the-art equipment, where students learn how to operate and maintain starships.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
-    },      
-      {
-        name: 'Command Training Room',
-        description: 'This room is equipped with holodecks that can simulate any leadership scenario, from a starship bridge to a diplomatic negotiation.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
-      },
-      
-      {
-        name: 'Language Lab',
-        description: 'This lab is equipped with computers that can teach students how to speak and understand different languages.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
-      },
-      
-      {
-        name: 'Medical Classroom',
-        description: 'This classroom is equipped with medical simulators and other equipment, where students learn how to treat injuries and diseases.',
-        adjacentLocations: ['Starfleet Academy Courtyard']
-      },
+        adjacentLocations: ['Starfleet Academy Courtyard', 'Cybernetics Lab']
+    }, 
       {
         name: 'Enterprise Bridge',
         description: 'You step onto the Enterprise\'s bridge. Officers sit at their stations monitoring the situation.',
@@ -72,10 +55,24 @@ export const AllPeople = [
         description: 'A stout tellerite, he is rather short and has messed hair. Professor Kirby looks like he spends most of his time frowning.',
         location: 'Cybernetics Lab',
         items: ['Cybernetic Arm'],
-        conversations: { 
-            'What do you teach?' : 'I teach Cybernetics here at the Academy.',
-            'Do you enjoy cybernetics?' : 'It is my life, but unfortunately few students have an appreciation for it.'
-        }
+        conversations: [
+            { 
+                question: 'What do you teach?',
+                answer:'I teach Cybernetics here at the Academy.',
+            },
+            {
+                question: 'Do you know where I can get some self-sealing stem bolts?',
+                answer: 'I would try the Engineering classroom. There\'s usually some there.'
+            },
+            {
+                question: 'Can I have a cybernetic arm to play with?',
+                answer: 'Sure, it must get boring being on a starship all the time huh?',
+                action: (gameContext) => {
+                    let arm = AllItems.find(x => x.name === 'Cybernetic Arm');
+                    gameContext.player.items.push(arm);
+                }
+            }
+        ]
     }
 ];
 
@@ -104,8 +101,7 @@ export const AllConditionals = [
 export const AllItems = [
     {
         name: 'Cybernetic Arm',
-        description: 'A detached mechanical arm.',
-        location: 'Cybernetics Lab'
+        description: 'A detached mechanical arm.'
     },
     {
         name: 'Self Sealing Stem Bolt Box',

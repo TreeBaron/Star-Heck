@@ -51,7 +51,7 @@ export function getTypos(str) {
 	    let temp = array_prox[str.charAt(a)];    
 		for(let b=0; b<temp.length; b++) {
 		    let typo = replaceAt(str, a, temp[b]);
-            console.log(typo);
+            //console.log(typo);
 		    arr.push(typo);
 		}
 	}
