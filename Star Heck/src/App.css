@@ -15,8 +15,8 @@
 .textFeed {
   min-height: 75vh;
   height: 75%;
-  font-family: 'Federant';
-  font-size: x-large;
+  font-family: 'Ubuntu';
+  font-size: large;
   color: #daf2e9;
   background-color: #23495d;
   border: 0px;
@@ -29,11 +29,12 @@
   min-height: 4vh;
   margin-top: 1vh;
   margin-bottom: 1vh;
-  font-family: 'Federant';
-  font-size: x-large;
+  font-family: 'Ubuntu';
+  font-size: large;
   color: #daf2e9;
   border-color: #f14e52;
   border: 2px solid;
+  padding-left: 15px;
 }
 
 .dot {
@@ -64,8 +65,8 @@
   margin-top: 4vh;
   margin-bottom: 4vh;
   height: 75%;
-  font-family: 'Federant';
-  font-size: x-large;
+  font-family: 'Ubuntu';
+  font-size: large;
   color: #daf2e9;
   background-color: #23495d;
   border: 0px;

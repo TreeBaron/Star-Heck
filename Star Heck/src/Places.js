@@ -25,7 +25,8 @@ export const AllLocations = [
     {
         name: 'Engineering Classroom',
         description: 'This classroom is filled with state-of-the-art equipment, where students learn how to operate and maintain starships.',
-        adjacentLocations: ['Starfleet Academy Courtyard', 'Cybernetics Lab']
+        adjacentLocations: ['Starfleet Academy Courtyard', 'Cybernetics Lab'],
+        hint: 'Hint: You can use the search command to search for items in rooms.'
     }, 
       {
         name: 'Enterprise Bridge',
@@ -81,7 +82,7 @@ export const AllConditionals = [
         location: 'Earth Space Dock',
         onEnterRoom: true,
         triggerLogic: (gameContext) => {
-            if(gameContext.player.inventory.find(x => x.name === 'Self Sealing Stem Bolt Box'))
+            if(gameContext.player.items.find(x => x.name === 'Self Sealing Stem Bolt Box'))
             {
                 let spaceDock = getLocation('Earth Space Dock');
                 spaceDock.adjacentLocations.push('Enterprise Transporter Room')

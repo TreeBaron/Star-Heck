@@ -6,10 +6,11 @@ function App() {
   const [consoleText, setConsoleText] = useState('Welcome to Star Heck.\nCreated by John Dodd.');
   const [inputValue, setInputValue] = useState('Enter commands here.');
   const [gameContext, setGameContext] = useState(null);
+  const [firstCommandRan, setFirstCommandRan] = useState(false);
+  const [hintText, setHintText] = useState('Hint: Use \'go to 1\' or \'go to space dock\' to travel');
   const textArea = useRef();
 
   const handleSubmit = (e) => {
-
     // Prevent the browser from reloading the page
     e.preventDefault();
 
@@ -79,23 +80,30 @@ function App() {
     gameContext.print = (text) => {
       gameContext.queuedText += '\n'+text;
     }
+    gameContext.hintText = hintText;
+    gameContext.setHintText = setHintText;
   }
-
-  let statusText = 'Green Alert. All is normal.';
-  let statusColor = 'green';
-  let status = 'green';
 
   // After render, this scrolls the textArea to the bottom.
   useEffect(() => {
     const area = textArea.current;
     area.scrollTop = area.scrollHeight;
+
+    if(firstCommandRan === false)
+    {
+      let result = PerformCommand('look', gameContext);
+      setGameContext(result);
+      setConsoleText(consoleText + '\n'+gameContext.queuedText);
+      gameContext.queuedText = '';
+      setFirstCommandRan(true);
+    }
   });
 
   return (
     <div className='everything'>
     <textarea value={consoleText} readOnly={true} onChange={() => console.log('change')} className="textFeed globalCentering" ref={textArea}/>
     <div className='statusDisplay globalCentering'>
-      <span class={status === 'red' ? "red dot" : status === 'yellow' ?  "yellow dot" : "green dot"} /> {statusText}
+      {hintText}
     </div>
     <form onSubmit={handleSubmit}>
       <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} className='userInput globalCentering' />

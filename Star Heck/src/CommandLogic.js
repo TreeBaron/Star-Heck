@@ -124,24 +124,15 @@ const take = (input, gameContext) =>
     }
 
     selected.location = undefined;
-    gameContext.player.inventory.push(selected);
+    gameContext.player.items.push(selected);
 
     gameContext.print('>> You pick up '+selected.name);
 
     return gameContext;
 }
 
-const look = (input, gameContext) => 
+const search = (input, gameContext) =>
 {
-    gameContext.print(getCurrentLocation(gameContext).description);
-    gameContext.print('\nNearby Locations:');
-    
-    let travelPlaces = getAdjacentLocations(gameContext);
-    for(let i = 0; i < travelPlaces.length; i++)
-    {
-        gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
-    }
-
     let items = getItemsInLocation(gameContext);
     if(items.length >= 1)
     {
@@ -152,6 +143,26 @@ const look = (input, gameContext) =>
         }
     }
 
+    return gameContext;
+}
+
+const look = (input, gameContext) => 
+{
+    gameContext.print(getCurrentLocation(gameContext).description);
+    
+    let people = getPeopleInLocation(gameContext);
+    for(let i = 0; i < people.length; i++)
+    {
+        gameContext.print('You may speak to '+people[i].name);
+    }
+
+    gameContext.print('\nNearby Locations:');
+    
+    let travelPlaces = getAdjacentLocations(gameContext);
+    for(let i = 0; i < travelPlaces.length; i++)
+    {
+        gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
+    }
 
     return gameContext;
 }
@@ -190,12 +201,6 @@ const talk = (input, gameContext) => {
             gameContext.setConsoleText(gameContext.consoleText + '\n>> '+gameContext.inputValue);
             gameContext.setInputValue('');
             
-            gameContext.print('');
-            for(let i = 0; i < selected.conversations.length; i++)
-            {
-                gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
-            }
-
             if(gameContext.inputValue.toLowerCase() == 'exit' || gameContext.inputValue.toLowerCase() == 'bye' || gameContext.inputValue.toLowerCase() == 'goodbye')
             {
                 gameContext.print('>> You say goodbye.');
@@ -209,15 +214,17 @@ const talk = (input, gameContext) => {
                     if(gameContext.inputValue == (i+1))
                     {
                         gameContext.setInputValue('');
+                        gameContext.print('>>'+selected.conversations[i].question+'\n');
                         gameContext.print(selected.conversations[i].answer);
                         if(selected.conversations[i].action)
                         {
                             selected.conversations[i].action(gameContext);
                         }
+                        selected.conversations[i] = null;
+                        selected.conversations = selected.conversations.filter((x) => x !== null);
                     }
                 }
             }
-            gameContext.print('');
             
             return gameContext;
         };
@@ -230,6 +237,12 @@ const talk = (input, gameContext) => {
         return gameContext;
     }
 
+    return gameContext;
+}
+
+const say = (input, gameContext) =>
+{
+    gameContext.print(input.replace('say ','You: '));
     return gameContext;
 }
 
@@ -265,6 +278,11 @@ const commenceTravel = (input, gameContext, message) =>
     gameContext.print(selected.description);
     gameContext.currentLocation = selected.name;
 
+    if(selected.hint)
+    {
+        gameContext.setHintText(selected.hint);
+    }
+
     // trigger any relevant events
     let conditionals = getConditionalsInLocation(gameContext);
     for(let i = 0; i < conditionals.length; i++)
@@ -273,6 +291,20 @@ const commenceTravel = (input, gameContext, message) =>
         {
             conditionals[i].triggerLogic(gameContext);
         }
+    }
+
+    let people = getPeopleInLocation(gameContext);
+    for(let i = 0; i < people.length; i++)
+    {
+        gameContext.print('You may speak to '+people[i].name);
+    }
+
+    gameContext.print('\nNearby Locations:');
+    
+    travelPlaces = getAdjacentLocations(gameContext);
+    for(let i = 0; i < travelPlaces.length; i++)
+    {
+        gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
     }
 
     return gameContext;
@@ -307,7 +339,8 @@ export const commandWordDictionary = [
     'up',
     'use',
     'warp',
-    'with'
+    'with',
+    'say'
     ];
 
 export const commandFunctionDictionary = {
@@ -334,5 +367,7 @@ export const commandFunctionDictionary = {
     'use (thing)' : notImplementedFunction,
     'take (thing)' : take,
     'look' : look,
-    'go to (thing)' : goTo
+    'search' : search,
+    'go to (thing)' : goTo,
+    'say (thing)' : say
 };

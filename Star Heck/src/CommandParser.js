@@ -109,8 +109,6 @@ export function tokenize(input, replaceThings) {
 }
 
 export function PerformCommand(input, gameContext) {
-    gameContext.print('>> '+input);
-
     let key = tokenize(input, true).join(' ');
 
     if(!(key in commandFunctionDictionary))
