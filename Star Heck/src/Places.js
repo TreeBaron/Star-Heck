@@ -71,7 +71,8 @@ export const AllPeople = [
                 action: (gameContext) => {
                     let arm = AllItems.find(x => x.name === 'Cybernetic Arm');
                     gameContext.player.items.push(arm);
-                }
+                },
+                doNotRepeat: true,
             }
         ]
     },

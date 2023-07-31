@@ -220,8 +220,12 @@ const talk = (input, gameContext) => {
                         {
                             selected.conversations[i].action(gameContext);
                         }
-                        selected.conversations[i] = null;
-                        selected.conversations = selected.conversations.filter((x) => x !== null);
+
+                        if(selected.conversations[i].doNotRepeat)
+                        {
+                            selected.conversations[i] = null;
+                            selected.conversations = selected.conversations.filter((x) => x !== null);
+                        }
                     }
                 }
             }
