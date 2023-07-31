@@ -21,15 +21,13 @@ function App() {
     }
 
     let input = `${inputValue}`;
-
-    setConsoleText(consoleText + '\n>> '+input);
     setInputValue('');
 
     if(gameContext.OverrideHandleSubmit)
     {
       console.log('Calling override.');
       let contextNew = gameContext.OverrideHandleSubmit(input, gameContext);
-      setConsoleText(consoleText + '\n'+gameContext.queuedText);
+      setConsoleText('\n'+gameContext.queuedText);
       gameContext.queuedText = '';
       setGameContext(contextNew);
       return;
@@ -41,7 +39,7 @@ function App() {
 
     let result = PerformCommand(input, gameContext);
     setGameContext(result);
-    setConsoleText(consoleText + '\n'+gameContext.queuedText);
+    setConsoleText('\n'+gameContext.queuedText);
     gameContext.queuedText = '';
   };
 
@@ -64,9 +62,22 @@ function App() {
         maxScience: 10,
         combat: 5,
         maxCombat: 10,
-        items: []
+        items: [],
+        communicatorMessages: []
       },
-      communicatorMessages: []
+      ship: {
+        impulsePower: true,
+        warpPower: true,
+        phasers: true,
+        photonTorpedos: true,
+        shields: true,
+        transporters: true,
+        crew: 203
+      },
+      mission: {
+        name: 'The Dark Arrow',
+        description: 'Deliver Colonists to a disputed planet on the border of Romulan space. The name of the planet: Dironia.'
+      }
     });
   }
 

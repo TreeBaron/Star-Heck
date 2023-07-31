@@ -136,7 +136,7 @@ const search = (input, gameContext) =>
     let items = getItemsInLocation(gameContext);
     if(items.length >= 1)
     {
-        gameContext.print('\nNearby Items:');
+        gameContext.print('\nFound Item(s):');
         for(let i = 0; i < items.length; i++)
         {
             gameContext.print('['+(i+1)+'] - '+items[i].name);
@@ -214,8 +214,8 @@ const talk = (input, gameContext) => {
                     if(gameContext.inputValue == (i+1))
                     {
                         gameContext.setInputValue('');
-                        gameContext.print('>>'+selected.conversations[i].question+'\n');
-                        gameContext.print(selected.conversations[i].answer);
+                        gameContext.print('You: '+selected.conversations[i].question+'\n');
+                        gameContext.print(selected.name+': '+selected.conversations[i].answer);
                         if(selected.conversations[i].action)
                         {
                             selected.conversations[i].action(gameContext);
@@ -283,16 +283,6 @@ const commenceTravel = (input, gameContext, message) =>
         gameContext.setHintText(selected.hint);
     }
 
-    // trigger any relevant events
-    let conditionals = getConditionalsInLocation(gameContext);
-    for(let i = 0; i < conditionals.length; i++)
-    {
-        if(conditionals[i].onEnterRoom)
-        {
-            conditionals[i].triggerLogic(gameContext);
-        }
-    }
-
     let people = getPeopleInLocation(gameContext);
     for(let i = 0; i < people.length; i++)
     {
@@ -305,6 +295,17 @@ const commenceTravel = (input, gameContext, message) =>
     for(let i = 0; i < travelPlaces.length; i++)
     {
         gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
+    }
+
+
+    // trigger any relevant events
+    let conditionals = getConditionalsInLocation(gameContext);
+    for(let i = 0; i < conditionals.length; i++)
+    {
+        if(conditionals[i].onEnterRoom)
+        {
+            conditionals[i].triggerLogic(gameContext);
+        }
     }
 
     return gameContext;

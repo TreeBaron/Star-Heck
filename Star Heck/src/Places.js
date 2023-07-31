@@ -40,7 +40,7 @@ export const AllLocations = [
     },
     {
         name: 'Enterprise Sickbay',
-        description: 'The warp core hums quietly. Technicians sit at their stations monitoring the flow of anti-matter.',
+        description: 'It\'s quiet here except for some nurces chatting in the backroom. Strange vials line the walls.',
         adjacentLocations: ['Enterprise Bridge', 'Enterprise Engineering']
     },
     {
@@ -74,7 +74,131 @@ export const AllPeople = [
                 }
             }
         ]
-    }
+    },
+    {
+        name: 'Scotty',
+        description: 'A Scottish alcoholic who\'s really good at engineering for some reason.',
+        location: 'Enterprise Engineering',
+        conversations: [
+            { 
+                question: 'How\'s it going?',
+                answer:'I could use a drink.',
+            },
+            {
+                question: 'Can we get more power out of the engines? Maybe 200% power?',
+                answer: 'Captain! I cannah change the laws of physics.'
+            },
+            {
+                question: 'What exactly is a self-sealing stem bolt?',
+                answer: 'Captain, if I have to explain the bare-bone basics of every physical contraption and mechanical widget on the ship we\'ll be here all day.\n\nYou: Sorry I asked...'
+            }
+        ]
+    },
+    {
+        name: 'Spock',
+        description: 'A talented half human, half vulcan science officer.',
+        location: 'Enterprise Bridge',
+        conversations: [
+            { 
+                question: 'How\'s it going?',
+                answer:'Most logically captain.',
+            },
+            {
+                question: 'Would you like to play chess?',
+                answer: 'Perhaps later captain, I have several important tasks I wish to accomplish.'
+            },
+            {
+                question: 'Live long and prosper.',
+                answer: 'Peace and long life.'
+            },
+        ]
+    },
+    {
+        name: 'Bones',
+        description: 'A talented surgeon and medical officer. Good with the ladies, great with his hands.',
+        location: 'Enterprise Sickbay',
+        conversations: [
+            { 
+                question: 'How\'s it going?',
+                answer:'Well I can\'t complain Jim.',
+            },
+            {
+                question: 'Do you think you can help Scotty in engineering later?',
+                answer: 'Dammit Jim I\'m a doctor not a miracle worker.'
+            },
+            {
+                question: 'Live long and prosper.',
+                answer: 'Stuff it.'
+            },
+            {
+                question: 'What is the crew status?',
+                answer: 'The crew is mostly chipper after shore-leave. There\'s a couple cases of an Andorian flu but nothing I can\'t fix.'
+            },
+        ]
+    },
+    {
+        name: 'Chekov',
+        description: 'A young Russian officer.',
+        location: 'Enterprise Bridge',
+        conversations: [
+            { 
+                question: 'Report ship status.',
+                answer:'Aye captain!',
+                action: (gameContext) =>
+                {
+                    gameContext.print('Captain, we have '+gameContext.ship.crew+' crew aboard.')
+
+                    if(gameContext.ship.impulsePower && gameContext.ship.warpPower && gameContext.ship.transporters && gameContext.ship.phasers 
+                        && gameContext.ship.photonTorpedos && gameContext.ship.shields)
+                    {
+                        gameContext.print('All systems are fully operational captain.');
+                    }
+                    else
+                    {
+                        if(!gameContext.ship.impulsePower)
+                        {
+                            gameContext.print('Impulse engines are down captain.');
+                        }
+
+                        if(!gameContext.ship.warpPower)
+                        {
+                            gameContext.print('Our warp drive is offline.');
+                        }
+
+                        if(!gameContext.ship.phasers)
+                        {
+                            gameContext.print('Our phasers are not responding.');
+                        }
+
+                        if(!gameContext.ship.photonTorpedos)
+                        {
+                            gameContext.print('We cannot launch photon torpedos.');
+                        }
+
+                        if(!gameContext.ship.shields)
+                        {
+                            gameContext.print('Captain our shields are down!');
+                        }
+
+                        if(!gameContext.ship.transporters)
+                        {
+                            gameContext.print('We are unable to use transporters captain.');
+                        }
+                    }
+                }
+            },
+            {
+                question: 'Mr Checkov, what exactly is our current mission?',
+                answer: 'Of course captain, our current mission is this.',
+                action: (gameContext) => {
+                    gameContext.print(gameContext.mission.description);
+                    gameContext.print('Captain, I like to call this mission \''+gameContext.mission.name+'\'\n');
+                    gameContext.print('You: Thank you Mr. Checkov but we can do without the commentary.\n');
+                    gameContext.print('Checkov: Aye, captain.\n');
+                }
+            }
+        ]
+    },
 ];
 
 export const AllConditionals = [
@@ -86,13 +210,13 @@ export const AllConditionals = [
             {
                 let spaceDock = getLocation('Earth Space Dock');
                 spaceDock.adjacentLocations.push('Enterprise Transporter Room')
-                gameContext.print('>> You message Scotty you have the bolts.')
+                gameContext.print('\n>> You message Scotty you have the bolts.\n')
                 gameContext.print('Scotty: Excellent work captain! I\'ll have her ready to be underway in a jiffy.');
             }
             else
             {
                 const scottysMessage = 'Scotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts.';
-                gameContext.print('>> Your communicator chirps.')
+                gameContext.print('\n>> Your communicator chirps.')
                 gameContext.communicatorMessages.push(scottysMessage);
             }
         }
