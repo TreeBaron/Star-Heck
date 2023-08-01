@@ -196,21 +196,29 @@ const talk = (input, gameContext) => {
     {
         const overrideFunction = (input, gameContext) => 
         {
-            gameContext.setConsoleText(gameContext.consoleText + '\n>> '+gameContext.inputValue);
+            let saidSomething = false;
             gameContext.setInputValue('');
-            
-            if(gameContext.inputValue.toLowerCase() == 'exit' || gameContext.inputValue.toLowerCase() == 'bye' || gameContext.inputValue.toLowerCase() == 'goodbye')
+
+            if(input.toLowerCase() == 'exit' || input.toLowerCase() == 'bye' || input.toLowerCase() == 'goodbye')
             {
-                gameContext.print('>> You say goodbye.');
+                gameContext.print('>> You say goodbye.\n');
                 gameContext.OverrideHandleSubmit = null;
+                return look(input, gameContext);
             }
             else
             {
                 gameContext.OverrideHandleSubmit = overrideFunction;
                 for(let i = 0; i < selected.conversations.length; i++)
                 {
-                    if(gameContext.inputValue == (i+1))
+                    if(input == (i+1))
                     {
+                        gameContext.print('>> You may continue the conversation or say goodbye.');
+                        for(let i = 0; i < selected.conversations.length; i++)
+                        {
+                            gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
+                        }
+                        gameContext.print('');
+
                         gameContext.setInputValue('');
                         gameContext.print('You: '+selected.conversations[i].question+'\n');
                         gameContext.print(selected.name+': '+selected.conversations[i].answer);
@@ -224,10 +232,23 @@ const talk = (input, gameContext) => {
                             selected.conversations[i] = null;
                             selected.conversations = selected.conversations.filter((x) => x !== null);
                         }
+
+
+                        saidSomething = true;
                     }
                 }
             }
             
+            if(!saidSomething)
+            {
+                gameContext.print('>> You may continue the conversation or say goodbye.');
+                for(let i = 0; i < selected.conversations.length; i++)
+                {
+                    gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
+                }
+                gameContext.print('');
+            }
+
             return gameContext;
         };
 
@@ -358,6 +379,7 @@ export const commandFunctionDictionary = {
     'beam up (thing)' : notImplementedFunction,
     'beam up away team' : notImplementedFunction,
     'talk to (thing)' : talk,
+    'talk':talk,
     'communicator' : communicator,
     'attack (thing)' : notImplementedFunction,
     'charm (thing)' : notImplementedFunction,

@@ -2,7 +2,6 @@ import { AllConditionals, AllItems, AllLocations, AllPeople, AllVehicles } from 
 
 export const setCurrentMission = (mission, gameContext) =>
 {
-    debugger
     addToArray(gameContext.allLocations, mission.allLocations);
     addToArray(gameContext.allPeople, mission.allPeople);
     addToArray(gameContext.allConditionals, mission.allConditionals);

@@ -101,7 +101,6 @@ function App() {
     // code order!
     if(gameContext.allLocations.length === 0)
     {
-      debugger
       addToArray(gameContext.allLocations, AllLocations);
       addToArray(gameContext.allPeople, AllPeople);
       addToArray(gameContext.allConditionals, AllConditionals);
