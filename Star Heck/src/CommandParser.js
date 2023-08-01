@@ -110,14 +110,15 @@ export function tokenize(input, replaceThings) {
 
 export function PerformCommand(input, gameContext) {
     let key = tokenize(input, true).join(' ');
+    let functionSelected;
 
     if(!(key in commandFunctionDictionary))
     {
-        gameContext.setConsoleText(gameContext.consoleText+'\nCommand not found.');
-        return gameContext;
+        gameContext.print('>> Command was not recognized\n');
+        functionSelected = commandFunctionDictionary['look'];
+        return functionSelected(input, gameContext);
     }
 
-    let functionSelected = commandFunctionDictionary[key];
-
+    functionSelected = commandFunctionDictionary[key];
     return functionSelected(input, gameContext);
 }
