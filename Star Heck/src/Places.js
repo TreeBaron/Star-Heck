@@ -216,7 +216,7 @@ export const AllConditionals = [
             }
             else
             {
-                const scottysMessage = 'Scotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts.';
+                const scottysMessage = 'Scotty: Captain, we have a real problem with the impulse engines here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts. Someone traded our supply for a case of Sorian brandy.\nYou: Someone Scotty?\nScotty: Aye, captain...';
                 gameContext.print('\n>> Your communicator chirps.')
                 gameContext.communicatorMessages.push(scottysMessage);
             }
@@ -238,13 +238,14 @@ export const AllItems = [
 
 export const AllVehicles = [
     {
-        name: 'Enterprise NCC 1701',
-        description: 'A constituition class starship.',
-        shieldsUp: true,
+        name: 'Constellation NCC 1432',
+        description: 'A constitution class starship.',
         impulsePower: true,
         warpPower: true,
         phasers: true,
         photonTorpedos: true,
+        shields: true,
+        transporters: true,
         location: 'Earth Space Dock',
         vehicleEntrance: 'Enterprise Transporter Room'
     }

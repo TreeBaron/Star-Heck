@@ -1,5 +1,3 @@
-import { AllLocations, AllItems, AllConditionals, AllPeople } from "./Places";
-
 /*
 Command List:
 fire (weapon) at (thing)
@@ -28,19 +26,19 @@ go to (place)
 */
 
 
-export const getLocation = (name) =>
+export const getLocation = (name, gameContext) =>
 {
-    return AllLocations.find(x => x.name === name);
+    return gameContext.allLocations.find(x => x.name === name);
 }
 
 export const getItemsInLocation = (gameContext) =>
 {
     let itemsInPlace = [];
-    for(let i = 0; i < AllItems.length; i++)
+    for(let i = 0; i < gameContext.allItems.length; i++)
     {
-        if(gameContext.currentLocation === AllItems[i].location)
+        if(gameContext.currentLocation === gameContext.allItems[i].location)
         {
-            itemsInPlace.push(AllItems[i]);
+            itemsInPlace.push(gameContext.allItems[i]);
         }
     }
     return itemsInPlace;
@@ -49,11 +47,11 @@ export const getItemsInLocation = (gameContext) =>
 export const getPeopleInLocation = (gameContext) =>
 {
     let peopleInPlace = [];
-    for(let i = 0; i < AllPeople.length; i++)
+    for(let i = 0; i < gameContext.allPeople.length; i++)
     {
-        if(gameContext.currentLocation === AllPeople[i].location)
+        if(gameContext.currentLocation === gameContext.allPeople[i].location)
         {
-            peopleInPlace.push(AllPeople[i]);
+            peopleInPlace.push(gameContext.allPeople[i]);
         }
     }
     return peopleInPlace;
@@ -62,11 +60,11 @@ export const getPeopleInLocation = (gameContext) =>
 export const getConditionalsInLocation = (gameContext) =>
 {
     let conditionals = [];
-    for(let i = 0; i < AllConditionals.length; i++)
+    for(let i = 0; i < gameContext.allConditionals.length; i++)
     {
-        if(gameContext.currentLocation === AllConditionals[i].location)
+        if(gameContext.currentLocation === gameContext.allConditionals[i].location)
         {
-            conditionals.push(AllConditionals[i]);
+            conditionals.push(gameContext.allConditionals[i]);
         }
     }
     return conditionals;
@@ -74,12 +72,12 @@ export const getConditionalsInLocation = (gameContext) =>
 
 export const getCurrentLocation = (gameContext) =>
 {
-    return AllLocations.find(x => x.name === gameContext.currentLocation);
+    return gameContext.allLocations.find(x => x.name === gameContext.currentLocation);
 }
 
 export const getAdjacentLocations = (gameContext) => {
     let currentLocation = getCurrentLocation(gameContext);
-    let adjacentPlaces = currentLocation.adjacentLocations.map(x => getLocation(x));
+    let adjacentPlaces = currentLocation.adjacentLocations.map(x => getLocation(x, gameContext));
     return adjacentPlaces;
 }
 
