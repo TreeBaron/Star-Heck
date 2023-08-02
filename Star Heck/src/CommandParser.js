@@ -114,7 +114,7 @@ export function PerformCommand(input, gameContext) {
 
     if(!(key in commandFunctionDictionary))
     {
-        gameContext.print('>> Command was not recognized\n');
+        gameContext.print('>> Command was not recognized');
         functionSelected = commandFunctionDictionary['look'];
         return functionSelected(input, gameContext);
     }

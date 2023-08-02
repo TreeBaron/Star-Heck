@@ -7,6 +7,19 @@ export const setCurrentMission = (mission, gameContext) =>
     addToArray(gameContext.allConditionals, mission.allConditionals);
     addToArray(gameContext.allItems, mission.allItems);
     addToArray(gameContext.allVehicles, mission.allVehicles);
+
+    for(let i = 0; i < gameContext.allPeople.length; i++)
+    {
+        let person = gameContext.allPeople[i];
+        for(let y = 0; y < mission.allConversations.length; y++)
+        {
+            let conversation = mission.allConversations[y];
+            if(person.name == conversation.person)
+            {
+                person.conversations.push({question: conversation.question, answer: conversation.answer, action: conversation.action, missionAdded: true});
+            }
+        }
+    }
 };
 
 export const addToArray = (arrayOne, arrayTwo) =>
@@ -25,4 +38,10 @@ export const removeCurrentMission = (gameContext) =>
     gameContext.allConditionals = gameContext.allConditionals.filter((x) => !mission.allConditionals.includes(x));
     gameContext.allItems = gameContext.allItems.filter((x) => !mission.allItems.includes(x));
     gameContext.allVehicles = gameContext.allVehicles.filter((x) => !mission.allVehicles.includes(x));
+
+    for(let i = 0; i < gameContext.allPeople; i++)
+    {
+        let person = gameContext.allPeople[i];
+        person.conversations = person.conversations.filter(x => !x.missionAdded);
+    }
 };

@@ -209,7 +209,7 @@ export const AllConditionals = [
         triggerLogic: (gameContext) => {
             if(gameContext.player.items.find(x => x.name === 'Self Sealing Stem Bolt Box'))
             {
-                let spaceDock = getLocation('Earth Space Dock');
+                let spaceDock = getLocation('Earth Space Dock', gameContext);
                 spaceDock.adjacentLocations.push('Enterprise Transporter Room')
                 gameContext.print('\n>> You message Scotty you have the bolts.\n')
                 gameContext.print('Scotty: Excellent work captain! I\'ll have her ready to be underway in a jiffy.');

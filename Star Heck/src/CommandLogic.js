@@ -90,13 +90,14 @@ export const notImplementedFunction = (input, gameContext) =>
 const communicator = (input, gameContext) => {
     if(gameContext.communicatorMessages.length >= 1)
     {
-        gameContext.print('>> You flip open your communicator.\n');
+        gameContext.print('>> You flip open your communicator.');
         gameContext.print(gameContext.communicatorMessages[0]);
         gameContext.communicatorMessages.shift();
     }
     else
     {
-        gameContext.print('>> You flip open your communicator.\n>> Captain\'s log...I still don\'t know what I\'m doing in command.'); 
+        gameContext.print('>> You flip open your communicator.>> Captain\'s log...I still don\'t know what I\'m doing in command.'); 
+        gameContext.print('Captain\'s log...I still don\'t know what I\'m doing in command.'); 
     }
 
     return gameContext;
@@ -201,7 +202,7 @@ const talk = (input, gameContext) => {
 
             if(input.toLowerCase() == 'exit' || input.toLowerCase() == 'bye' || input.toLowerCase() == 'goodbye')
             {
-                gameContext.print('>> You say goodbye.\n');
+                gameContext.print('>> You say goodbye.');
                 gameContext.OverrideHandleSubmit = null;
                 return look(input, gameContext);
             }
@@ -220,7 +221,7 @@ const talk = (input, gameContext) => {
                         gameContext.print('');
 
                         gameContext.setInputValue('');
-                        gameContext.print('You: '+selected.conversations[i].question+'\n');
+                        gameContext.print('You: '+selected.conversations[i].question);
                         gameContext.print(selected.name+': '+selected.conversations[i].answer);
                         if(selected.conversations[i].action)
                         {
@@ -267,6 +268,67 @@ const say = (input, gameContext) =>
 {
     gameContext.print(input.replace('say ','You: '));
     return gameContext;
+}
+
+const isLike = (text, text2) =>
+{
+    text = text.toLowerCase();
+    text2 = text.toLowerCase();
+
+    if(text == text2) return true;
+
+    if(text.includes(text2)) return true;
+
+    let sortedText = text.sort();
+    let sortedText2 = text.sort();
+    let score = 0;
+    for(let i = 0; i < sortedText.length; i++)
+    {
+        if(sortedText[i] === sortedText2[i])
+        {
+            score++;
+        }
+    }
+
+    if(score > sortedText.length / 2)
+    {
+        return true;
+    }
+    
+    return false;
+    
+}
+
+const scan = (input, gameContext) => {
+
+    gameContext.print('>> You pull out your tricorder.');
+    let people = getPeopleInLocation(gameContext);
+    let selectedPerson = null;
+    for(let i = 0; i < people.length; i++)
+    {   
+        if(isLike(input, people[i].name))
+        {
+            selectedPerson = people[i];
+        }
+    }
+    
+    if(selectedPerson)
+    {
+        gameContext.print('>> Scanning '+selectedPerson.name+'...');
+        let allConditionals = gameContext.allConditionals;
+        for(let i = 0; i < allConditionals.length; i++)
+        {
+            if(allConditionals[i].person === selectedPerson.name && allConditionals[i].onScan)
+            {
+                allConditionals[i].triggerLogic(gameContext);
+            }
+        }
+    }
+
+    return gameContext;
+
+    //todo: add other types to scan.
+
 }
 
 const beamDown = (input, gameContext) => 
@@ -364,7 +426,8 @@ export const commandWordDictionary = [
     'use',
     'warp',
     'with',
-    'say'
+    'say',
+    'scan'
     ];
 
 export const commandFunctionDictionary = {
@@ -394,5 +457,6 @@ export const commandFunctionDictionary = {
     'look' : look,
     'search' : search,
     'go to (thing)' : goTo,
-    'say (thing)' : say
+    'say (thing)' : say,
+    'scan (thing)' : scan,
 };

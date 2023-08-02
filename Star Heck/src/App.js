@@ -52,7 +52,7 @@ function App() {
     consoleText: consoleText,
     queuedText: '',
     print: (text) => {
-      gameContext.queuedText += '\n'+text;
+      gameContext.queuedText += '\n'+text+'\n';
     },
     hintText: hintText,
     setHintText: setHintText,
