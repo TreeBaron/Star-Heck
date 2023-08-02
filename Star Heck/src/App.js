@@ -54,6 +54,12 @@ function App() {
     print: (text) => {
       gameContext.queuedText += '\n'+text+'\n';
     },
+    getPerson: function (name) {
+      return this.allPeople.find(x => x.name === name);
+    },
+    getLocation: function (name) {
+      return this.allLocations.find(x => x.name === name);
+    },
     hintText: hintText,
     setHintText: setHintText,
   });

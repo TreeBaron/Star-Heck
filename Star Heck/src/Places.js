@@ -100,17 +100,13 @@ export const AllPeople = [
         description: 'A talented half human, half vulcan science officer.',
         location: 'Enterprise Bridge',
         conversations: [
-            { 
-                question: 'How\'s it going?',
-                answer:'Most logically captain.',
-            },
             {
                 question: 'Would you like to play chess?',
                 answer: 'Perhaps later captain, I have several important tasks I wish to accomplish.'
             },
             {
                 question: 'Live long and prosper.',
-                answer: 'Peace and long life.'
+                answer: 'And to you captain.'
             },
         ]
     },
@@ -120,7 +116,7 @@ export const AllPeople = [
         location: 'Enterprise Sickbay',
         conversations: [
             { 
-                question: 'How\'s it going?',
+                question: 'How goes it Bones?',
                 answer:'Well I can\'t complain Jim.',
             },
             {
@@ -216,7 +212,7 @@ export const AllConditionals = [
             }
             else
             {
-                const scottysMessage = 'Scotty: Captain, we have a real problem with the impulse engines here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts. Someone traded our supply for a case of Sorian brandy.\nYou: Someone Scotty?\nScotty: Aye, captain...';
+                const scottysMessage = 'Scotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts. Someone traded our supply for a case of Sorian brandy.\nYou: Someone Scotty?\nScotty: Aye, captain...';
                 gameContext.print('\n>> Your communicator chirps.')
                 gameContext.communicatorMessages.push(scottysMessage);
             }
