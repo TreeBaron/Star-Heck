@@ -212,7 +212,7 @@ export const AllConditionals = [
             }
             else
             {
-                const scottysMessage = 'Scotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts. Someone traded our supply for a case of Sorian brandy.\nYou: Someone Scotty?\nScotty: Aye, captain...';
+                const scottysMessage = '\nScotty: Captain, we have a real problem with the transporter here. I can fix it and we can get underway just as soon as I get some self-sealing stem bolts. Someone traded our supply for a case of Sorian brandy.\n\nYou: Someone Scotty?\n\nScotty: Aye, captain...';
                 gameContext.print('\n>> Your communicator chirps.')
                 gameContext.communicatorMessages.push(scottysMessage);
             }

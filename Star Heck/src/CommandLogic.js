@@ -90,6 +90,8 @@ export const notImplementedFunction = (input, gameContext) =>
 const communicator = (input, gameContext) => {
     if(gameContext.communicatorMessages.length >= 1)
     {
+        look('look', gameContext);
+
         gameContext.print('>> You flip open your communicator.');
         gameContext.print(gameContext.communicatorMessages[0]);
         gameContext.communicatorMessages.shift();
@@ -105,6 +107,8 @@ const communicator = (input, gameContext) => {
 
 const take = (input, gameContext) =>
 {
+    look('look', gameContext);
+
     input = input.toLowerCase();
     let items = getItemsInLocation(gameContext);
     if(items.length <= 0)
@@ -127,11 +131,14 @@ const take = (input, gameContext) =>
 
     gameContext.print('>> You pick up '+selected.name);
 
+
     return gameContext;
 }
 
 const search = (input, gameContext) =>
 {
+    gameContext = look('look', gameContext);
+
     let items = getItemsInLocation(gameContext);
     if(items.length >= 1)
     {
@@ -142,11 +149,17 @@ const search = (input, gameContext) =>
         }
     }
 
+    if(items.length === 0)
+    {
+        gameContext.print('>> You look around but cannot find anything.')
+    }
+
     return gameContext;
 }
 
 const look = (input, gameContext) => 
 {
+    gameContext.print('['+getCurrentLocation(gameContext).name+']');
     gameContext.print(getCurrentLocation(gameContext).description);
     
     let people = getPeopleInLocation(gameContext);
@@ -179,19 +192,20 @@ const talk = (input, gameContext) => {
     let selected = people[0];
     for(let i = 0; i < people.length; i++)
     {
-        if(input.includes(people[i].name.toLowerCase() || input.includes((i+1))))
+        if(isLike(people[i].name, input))
         {
             selected = people[i];
         }
     }
 
     gameContext.print('>> You talk to '+selected.name);
-
-    gameContext.print('');
     for(let i = 0; i < selected.conversations.length; i++)
     {
         gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
     }
+                        
+    gameContext.print('>> You select a question by typing a number, or leave by saying \'goodbye\'');
+    gameContext.print('');
 
     if(selected.conversations.length >= 1)
     {
@@ -202,9 +216,10 @@ const talk = (input, gameContext) => {
 
             if(input.toLowerCase() == 'exit' || input.toLowerCase() == 'bye' || input.toLowerCase() == 'goodbye')
             {
+                gameContext = look('look', gameContext);
                 gameContext.print('>> You say goodbye.');
                 gameContext.OverrideHandleSubmit = null;
-                return look(input, gameContext);
+                return gameContext;
             }
             else
             {
@@ -213,13 +228,16 @@ const talk = (input, gameContext) => {
                 {
                     if(input == (i+1))
                     {
-                        gameContext.print('>> You may continue the conversation or say goodbye.');
+                        gameContext.print('>> You talk to '+selected.name);
+                        
+                    
                         for(let i = 0; i < selected.conversations.length; i++)
                         {
                             gameContext.print('['+(i+1)+'] - '+selected.conversations[i].question);
                         }
+                        
+                        gameContext.print('>> You select a question by typing a number, or leave by saying \'goodbye\'');
                         gameContext.print('');
-
                         gameContext.setInputValue('');
                         gameContext.print('You: '+selected.conversations[i].question);
                         gameContext.print(selected.name+': '+selected.conversations[i].answer);
@@ -270,27 +288,28 @@ const say = (input, gameContext) =>
     return gameContext;
 }
 
-const isLike = (text, text2) =>
+const isLike = (input, text2) =>
 {
-    text = text.toLowerCase();
-    text2 = text.toLowerCase();
+    input = input.toLowerCase();
+    text2 = text2.toLowerCase();
 
-    if(text == text2) return true;
+    if(input == text2) return true;
 
-    if(text.includes(text2)) return true;
+    if(input.includes(text2)) return true;
 
-    let sortedText = text.sort();
-    let sortedText2 = text.sort();
     let score = 0;
-    for(let i = 0; i < sortedText.length; i++)
+    for(let i = 0; i < input.length; i++)
     {
-        if(sortedText[i] === sortedText2[i])
+        for(let z = 0; z < text2.length; z++)
         {
-            score++;
+            if(text2[z] === input[i])
+            {
+                score++;
+            }
         }
     }
 
-    if(score > sortedText.length / 2)
+    if(score >= text2.length / 2)
     {
         return true;
     }
@@ -354,13 +373,11 @@ const commenceTravel = (input, gameContext, message) =>
     let selected = travelPlaces[0];
     for(let i = 0; i < travelPlaces.length; i++)
     {
-        if(input.includes(travelPlaces[i].name.toLowerCase()) || input.includes((i+1)))
+        if( input.includes((i+1) || isLike(travelPlaces[i].name, input)))
         {
             selected = travelPlaces[i];
         }
     }
-    gameContext.print(message.replace('(place)', selected.name));
-    gameContext.print(selected.description);
     gameContext.currentLocation = selected.name;
 
     if(selected.hint)
@@ -368,20 +385,9 @@ const commenceTravel = (input, gameContext, message) =>
         gameContext.setHintText(selected.hint);
     }
 
-    let people = getPeopleInLocation(gameContext);
-    for(let i = 0; i < people.length; i++)
-    {
-        gameContext.print('You may speak to '+people[i].name);
-    }
+    gameContext = look('look', gameContext);
 
-    gameContext.print('\nNearby Locations:');
-    
-    travelPlaces = getAdjacentLocations(gameContext);
-    for(let i = 0; i < travelPlaces.length; i++)
-    {
-        gameContext.print('['+(i+1)+'] - '+travelPlaces[i].name);
-    }
-
+    gameContext.print(message.replace('(place)', selected.name));
 
     // trigger any relevant events
     let conditionals = getConditionalsInLocation(gameContext);

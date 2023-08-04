@@ -2,7 +2,38 @@ export const theDarkArrow =
 {
     name: 'The Dark Arrow',
     description: 'Deliver Colonists to a disputed planet on the border of Romulan space. The name of the planet: Dironia.',
-    allLocations: [],
+    allLocations: [
+    {
+        name: 'Dironia Beam Down Site',
+        description: 'You\'re near a rock wall, in a shallow canyon. In the middle of the canyon is a small stream. Blue bushes and purple grass line the canyon.',
+        adjacentLocations: ['Canyon North', 'Canyon South']
+    },
+    {
+        name: 'Canyon South',
+        description: 'The southern part of the canyon. From here you can see the stream goes into a cave in the distance.',
+        adjacentLocations: ['Dironia Beam Down Site', 'Cave Entrance']
+    },
+    {
+        name: 'Canyon North',
+        description: 'The northern part of the canyon. It is a little wider here.',
+        adjacentLocations: ['Dironia Beam Down Site']
+    },
+    {
+        name: 'Colony Campsite',
+        description: 'A flat area of desert near a lake. You can see sandy desert to the east.',
+        adjacentLocations: ['Sandy Desert', 'Lake Shore']
+    },
+    {
+        name: 'Sandy Desert',
+        description: 'Large dunes surround you in every direction.',
+        adjacentLocations: ['Colony Campsite']
+    },
+    {
+        name: 'Lake Shore',
+        description: 'The rocky shore of a large lake.',
+        adjacentLocations: ['Colony Campsite']
+    },
+    ],
     allPeople: [
         {
             name: 'Mi\'lock The Vulcan',
